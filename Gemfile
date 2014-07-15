@@ -7,15 +7,8 @@ group :development, :test do
   gem 'rack-test', '~> 0.6.2'
 end
 
-platforms :ruby_21 do
-  gem 'bigdecimal', '>= 1.2.4'
-end
-
 gem 'puma', '~> 2.7.1'
 gem 'redis', '~> 3.0.7', :require => 'redis'
-# gem 'moneta', :require => 'rack/session/moneta'
-# gem 'rack-cors', :require => 'rack/cors'
-gem 'faye'
-gem 'faye-redis', :require => 'faye/redis'
-gem 'activesupport', :require => 'active_support/core_ext'
-gem 'sinatra'
+gem 'faye', '~> 1.0.3'
+gem 'faye-redis', '~> 0.2.0', :require => 'faye/redis'
+gem 'activesupport', '~> 4.1.x', :require => 'active_support/core_ext'

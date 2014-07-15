@@ -1,5 +1,5 @@
-configure do |app|
-  redis = Redis.new(app.redis.symbolize_keys)
+configure do |config|
+  redis = Redis.new(config[:redis].symbolize_keys)
   redis_listener = Thread.new do |t|
     begin
       redis.subscribe(:pibi_realtime) do |on|

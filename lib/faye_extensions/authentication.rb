@@ -2,12 +2,11 @@ class FayeExtensions::Authentication
   attr_reader :redis
 
   def initialize
-    @redis = Redis.new(Sinatra::Application.redis.symbolize_keys)
+    @redis = Redis.new(config[:redis])
   end
 
   def incoming(message, request, callback)
-    puts "Extension Authentication is running: #{message}"
-    puts "Request session: (#{request.session['id'] || request.session[:id]}) #{request.session}"
+    puts "Extension Authentication is running: #{message}" if DEBUG
 
     # Let non-subscribe messages through
     if message['channel'] == '/meta/subscribe'
