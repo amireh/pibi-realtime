@@ -5,7 +5,7 @@ require './config/initialize'
 
 Faye::WebSocket.load_adapter('puma')
 
-run Faye::RackAdapter.new({
+$faye = Faye::RackAdapter.new({
   mount: '/',
   timeout: config[:faye][:timeout],
   extensions: [ FayeExtensions::Authentication.new ],
@@ -18,3 +18,5 @@ run Faye::RackAdapter.new({
     database: config[:faye][:redis][:database],
   }
 })
+
+run $faye
