@@ -6,16 +6,17 @@ class FayeExtensions::Authentication
   end
 
   def incoming(message, request, callback)
-    puts "Extension Authentication is running: #{message}" if DEBUG
-
     # Let non-subscribe messages through
     if message['channel'] == '/meta/subscribe'
+      puts "Client is subscribing, testing authenticity." if DEBUG
+
       # Get subscribed channel and auth token
       subscription = message['subscription']
       access_token = message['ext'] && message['ext']['accessToken']
 
       # Add an error if the tokens don't match
       if redis.get(subscription) != access_token
+        puts "\t[ERROR]: 401 client is not authorized." if DEBUG
         message['error'] = 'Invalid subscription auth token.'
       end
     end

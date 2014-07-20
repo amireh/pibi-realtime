@@ -4,5 +4,5 @@ configure do |app|
   puts ">> Environment: #{ENV['RACK_ENV']}"
 
   require 'lib/faye_extensions'
-  require "config/initializers/redis"
+  require 'lib/dispatcher'
 end

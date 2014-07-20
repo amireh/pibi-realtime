@@ -5,10 +5,13 @@ require './config/initialize'
 
 Faye::WebSocket.load_adapter('puma')
 
-$faye = Faye::RackAdapter.new({
+faye = Faye::RackAdapter.new({
   mount: '/',
   timeout: config[:faye][:timeout],
-  extensions: [ FayeExtensions::Authentication.new ],
+  extensions: [
+    FayeExtensions::Logging.new,
+    FayeExtensions::Authentication.new,
+  ],
   engine: {
     type: Faye::Redis,
     host: config[:redis][:host],
@@ -19,4 +22,12 @@ $faye = Faye::RackAdapter.new({
   }
 })
 
-run $faye
+configure do |config|
+  Dispatcher.instance.start(config[:redis].symbolize_keys, faye.get_client)
+
+  at_exit do
+    Dispatcher.instance.stop
+  end
+end
+
+run faye
