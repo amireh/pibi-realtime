@@ -3,6 +3,8 @@ require 'bundler'
 require './config/boot'
 require './config/initialize'
 
+Thread.abort_on_exception = true
+
 Faye::WebSocket.load_adapter('puma')
 
 faye = Faye::RackAdapter.new({
