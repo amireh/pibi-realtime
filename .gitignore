@@ -1,1 +1,4 @@
-/config/application.yml
+/config/application.yml/tmp
+/.bundle
+/bin
+/tmp

@@ -7,7 +7,7 @@ group :development, :test do
   gem 'rack-test', '~> 0.6.2'
 end
 
-gem 'puma', '~> 2.7.1'
+gem 'puma', '~> 2.9.0'
 gem 'redis', '~> 3.0.7', :require => 'redis'
 gem 'faye', '~> 1.0.3'
 gem 'faye-redis', '~> 0.2.0', :require => 'faye/redis'
