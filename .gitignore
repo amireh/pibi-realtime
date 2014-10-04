@@ -1,4 +1,5 @@
-/config/application.yml/tmp
+/config/application.yml
 /.bundle
 /bin
 /tmp
+!/tmp/.gitkeep
