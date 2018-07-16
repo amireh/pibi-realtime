@@ -2,7 +2,7 @@ class FayeExtensions::Authentication
   attr_reader :redis
 
   def initialize
-    @redis = Redis.new(config[:redis])
+    @redis = Redis.new(config['redis'])
   end
 
   def incoming(message, request, callback)

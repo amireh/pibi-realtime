@@ -50,7 +50,7 @@ class Dispatcher
   end
 
   def stop
-    return unless @listener.present?
+    return unless @listener.nil?
 
     @listener.kill
     @listener = nil

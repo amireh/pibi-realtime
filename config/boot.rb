@@ -16,7 +16,7 @@ def config
       raise "Missing required config file: #{filepath}"
     end
 
-    YAML.load_file(filepath).with_indifferent_access[ENV['RACK_ENV']]
+    YAML.load_file(filepath)[ENV['RACK_ENV']]
   end
 end
 
