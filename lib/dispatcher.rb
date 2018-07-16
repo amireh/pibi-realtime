@@ -1,20 +1,19 @@
 require 'singleton'
+require 'json'
+require 'eventmachine'
 
 class Dispatcher
-  include Singleton
-
-  def start(redis_config, faye)
-    redis = Redis.new(redis_config)
-
-    @listener = Thread.new do |t|
+  def start(config, faye)
+    EM.defer do
       begin
-        redis.subscribe(:pibi_realtime) do |on|
+        redis = Redis.new(config['redis'])
+        redis.subscribe(config['channel']) do |on|
           on.subscribe do |channel, subscriptions|
-            puts "Subscribed to ##{channel} (#{subscriptions} subscriptions)"
+            STDERR.puts "Subscribed to ##{channel} (#{subscriptions} subscriptions)"
           end
 
           on.message do |channel, message|
-            puts "Redis: ##{channel}: #{message}"# if DEBUG
+            STDERR.puts "Redis: ##{channel}: #{message}"
 
             begin
               process_message(message, faye)
@@ -33,7 +32,7 @@ class Dispatcher
               ---------------------------------------------------------------
               ERROR
 
-              puts(stream.split("\n").map(&:strip).join("\n"))
+              STDERR.puts(stream.split("\n").map(&:strip).join("\n"))
             end
           end
 
@@ -42,18 +41,11 @@ class Dispatcher
           end
         end
       rescue Redis::BaseConnectionError => error
-        puts "Redis connection error: #{error}, retrying in 1s"
+        STDERR.puts "pibi-realtime: Redis connection error, retrying in 1s (#{error})"
         sleep 1
         retry
       end
     end
-  end
-
-  def stop
-    return unless @listener.nil?
-
-    @listener.kill
-    @listener = nil
   end
 
   private
@@ -78,6 +70,6 @@ class Dispatcher
       client_id: params['client_id']
     })
 
-    puts "Notified user: #{user_id} in channel #{user_channel}"# if DEBUG
+    STDERR.puts "Notified user: #{user_id} in channel #{user_channel}"
   end
 end
