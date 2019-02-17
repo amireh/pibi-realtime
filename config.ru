@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'yaml'
+require 'erb'
 require_relative './lib/dispatcher'
 require_relative './lib/faye_extensions/authentication'
 require_relative './lib/faye_extensions/logging'
@@ -15,7 +16,20 @@ unless File.exists?(config_file)
   raise "Missing required config file: #{config_file}"
 end
 
-config = YAML.load_file(config_file)[env_profile]
+def read_config(filename)
+  content = File.read(filename)
+  templated = ERB.new(content).tap { |x| x.filename = filename }.result(binding)
+  evaluated = YAML.safe_load(templated, [], [], true, filename)
+end
+
+config = read_config(config_file)
+
+unless config.key?(env_profile)
+  fail "missing configuration for environment \"#{env_profile}\""
+end
+
+config = config[env_profile]
+
 redis  = Redis.new(config['redis'])
 
 Faye::WebSocket.load_adapter('puma')
