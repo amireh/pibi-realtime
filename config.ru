@@ -31,7 +31,6 @@ end
 config = config[env_profile]
 
 redis  = Redis.new(config['redis'])
-
 Faye::WebSocket.load_adapter('puma')
 Faye::RackAdapter.new({
   mount: '/',
